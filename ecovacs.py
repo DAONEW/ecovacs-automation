@@ -239,6 +239,7 @@ def ClickStart():
 # MapScreenshot
 # --------------------------
 def MapScreenshot():
+    global map_status_entity, last_map_status
     navigate_to("Robot")
 
     dismissWaringsAndLog()
@@ -262,19 +263,23 @@ def MapScreenshot():
     except subprocess.CalledProcessError as e:
         print("Error during SCP:", e)
     # ----------- update Status ---------------
-    # index="1" text="Clean Water Tank short of water or not installed" resource-id="" class="android.widget.TextView"
-    status_text = "Unknown"
+    # index="1" text="Clean water tank low on water or not installed" resource-id="" class="android.widget.TextView"
+    refresh_tree()
+    status_text = ""
     status_elem = find_by_desc(get_tree(), "Benachrichtigung von ECOVACS HOME:", contains=True)
     if status_elem is not None:
         status_text = status_elem.attrib.get("content-desc", "")
         status_text = status_text.replace("Benachrichtigung von ECOVACS HOME: ", "")
     else:
-        text_elem = find_by_text(get_tree(), "Clean Water Tank short of water or not installed")
+        text_elem = find_by_text(get_tree(), "Clean water tank low on water or not installed")        
         if text_elem is not None:
             status_text = text_elem.attrib.get("text", "")
-    status_text = status_text.strip() or getRobotStatusBar()
+    if not status_text.strip():
+        status_text = getRobotStatusBar() or ""
+    if not status_text:
+        status_text = last_map_status or "Unknown"
+    status_text = status_text.strip()
     print("Status:", status_text)
-    global map_status_entity, last_map_status
     last_map_status = status_text
     if map_status_entity is not None:
         map_status_entity.publish_state(status_text)
