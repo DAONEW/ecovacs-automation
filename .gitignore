@@ -12,5 +12,8 @@ android/share/
 .vscode/
 
 # Local artifacts
+sec.py
+tests/
 Map_cropped.png
 *.log
+ui_dump.xml
