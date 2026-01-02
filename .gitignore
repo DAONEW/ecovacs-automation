@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.env
+venv/
+android/bin/
+android/lib/
+android/include/
+android/share/
+
+# IDE
+.vscode/
+
+# Local artifacts
+Map_cropped.png
+*.log
