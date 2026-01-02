@@ -14,3 +14,4 @@ android/share/
 # Local artifacts
 Map_cropped.png
 *.log
+sec.py
