@@ -55,11 +55,13 @@ class MapManager:
     def _update_map_status(self):
         self.device.refresh_tree()
         status_text = ""
-        status_elem = self.device.find_by_desc("Benachrichtigung von ECOVACS HOME:", contains=True)
-        # if status_elem is not None:
-        #     status_text = status_elem.attrib.get("content-desc", "")
-        #     status_text = status_text.replace("Benachrichtigung von ECOVACS HOME: ", "")
-        # else:
+        for grandchild in self.device.get_tree().findall(
+                ".//node[@class='android.view.View'][@index='1']"
+                "/node[@class='android.view.View'][@index='0']"
+                "/node[@class='android.view.View'][@index='0']"
+                "/node[@class='android.view.View'][@index='0']"
+            ):
+            status_text = ' '.join([tv.attrib.get("text", "") for tv in grandchild.findall("./node[@class='android.widget.TextView']") if tv.attrib.get("text")])
         text_elem = self.device.find_by_text("Clean water tank low on water or not installed")
         if text_elem is not None:
             status_text = text_elem.attrib.get("text", "")
